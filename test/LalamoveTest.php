@@ -6,11 +6,13 @@ use Lalamove\Api\Lalamoveapi;
 use Lalamove\Api\Request;
 use PHPUnit\Framework\TestCase;
 
-$Loader = new \josegonzalez\Dotenv\Loader('.env');
-// Parse the .env file
-$Loader->parse();
-// Send the parsed .env file to the $_ENV variable
-$Loader->toEnv();
+if (!getenv('country')) {
+  $Loader = new \josegonzalez\Dotenv\Loader('.env');
+  // Parse the .env file
+  $Loader->parse();
+  // Send the parsed .env file to the $_ENV variable
+  $Loader->putenv();
+}
 
 class LalamoveTest extends TestCase {
   public $body = array(
@@ -52,8 +54,10 @@ class LalamoveTest extends TestCase {
     )
   );
 
+  //echo getenv('host');
+
   public function testAuthFail() {
-    $request = new Lalamoveapi($_ENV['host'], 'abc123', 'abc123', $_ENV['country']);
+    $request = new Lalamoveapi(getenv('host'), 'abc123', 'abc123', getenv('country'));
     $result = $request->quotation($this->body);
 
     self::assertSame($result->getStatusCode(), 401);
@@ -61,7 +65,7 @@ class LalamoveTest extends TestCase {
 
   public function testQuotation() {
     $this->body['scheduleAt'] = $time = gmdate('Y-m-d\TH:i:s\Z', time() + 60 * 30);
-    $request = new Lalamoveapi($_ENV['host'], $_ENV['key'], $_ENV['secret'], $_ENV['country']);
+    $request = new Lalamoveapi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
     $result = $request->quotation($this->body);
 
     self::assertSame($result->getStatusCode(), 200);

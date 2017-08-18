@@ -1,9 +1,5 @@
 <?php
 
-namespace Lalamove\Api;
-
-use Lalamove\Api\Lalamoveapi;
-use Lalamove\Api\Request;
 use PHPUnit\Framework\TestCase;
 
 if (!getenv('country')) {
@@ -57,7 +53,7 @@ class LalamoveTest extends TestCase {
   //echo getenv('host');
 
   public function testAuthFail() {
-    $request = new Lalamoveapi(getenv('host'), 'abc123', 'abc123', getenv('country'));
+    $request = new \Lalamove\Api\LalamoveApi(getenv('host'), 'abc123', 'abc123', getenv('country'));
     $result = $request->quotation($this->body);
 
     self::assertSame($result->getStatusCode(), 401);
@@ -65,7 +61,7 @@ class LalamoveTest extends TestCase {
 
   public function testQuotation() {
     $this->body['scheduleAt'] = $time = gmdate('Y-m-d\TH:i:s\Z', time() + 60 * 30);
-    $request = new Lalamoveapi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
+    $request = new \Lalamove\Api\LalamoveApi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
     $result = $request->quotation($this->body);
 
     self::assertSame($result->getStatusCode(), 200);

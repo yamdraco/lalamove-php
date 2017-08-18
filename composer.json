@@ -17,9 +17,16 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "AppTest\\Acme\\": "test/"
+      "Lalamove\\Api\\": "test/"
     }
   },
   "minimum-stability": "dev",
-  "prefer-stable": true
+  "prefer-stable": true,
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Draco Yam",
+      "email": "yamdraco@gmail.com"
+    }
+  ]
 }

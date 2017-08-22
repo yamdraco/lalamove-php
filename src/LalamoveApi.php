@@ -21,11 +21,11 @@
 namespace Lalamove\Api;
 
 class Request {
-  public $method = "GET";
-  public $body = array();
+  public $method = 'GET';
+  public $body = [];
   public $host = ''; 
   public $path = ''; 
-  public $header = array();
+  public $header = [];
 
   public $key = ''; 
   public $secret = ''; 
@@ -34,29 +34,29 @@ class Request {
   public $ch = null;
 
   /** 
-   * Create the signature for the 
+   * Create signature
    * @param $time, time to create the signature (should use current time, same as the Authorization timestamp)
    *
    * @return a signed signature using the secret
    */
   public function getSignature($time) {
     $_encryptBody = ''; 
-    if ($this->method == "GET") {
-      $_encryptBody = $time."\r\n.$this->method.\r\n".$this->path."\r\n\r\n";
+    if ($this->method === 'GET') {
+      $_encryptBody = $time.'\r\n.$this->method.\r\n'.$this->path.'\r\n\r\n';
     } else {
-      $_encryptBody = $time."\r\n".$this->method."\r\n".$this->path."\r\n\r\n".json_encode($this->body);
+      $_encryptBody = $time.'\r\n'.$this->method.'\r\n'.$this->path.'\r\n\r\n'.json_encode($this->body);
     }   
-    return hash_hmac("sha256", $_encryptBody, $this->secret);
+    return hash_hmac('sha256', $_encryptBody, $this->secret);
   }
 
   public function buildHeader() {
     $time = time() * 1000;
     return [
-      "X-Request-ID" => uniqid(),
-      "Content-type" => "application/json; charset=utf-8",
-      "Authorization" => "hmac ".$this->key.":".$time.":".$this->getSignature($time),
-      "Accept"=> "application/json",
-      "X-LLM-Country"=> $this->country
+      'X-Request-ID' => uniqid(),
+      'Content-type' => 'application/json; charset=utf-8',
+      'Authorization' => 'hmac '.$this->key.':'.$time.':'.$this->getSignature($time),
+      'Accept' => "application/json",
+      'X-LLM-Country' => $this->country
     ];  
   }
 
@@ -106,7 +106,7 @@ class LalamoveApi {
   public function quotation($body) {
     $request = new Request();
     $request->method = 'POST';
-    $request->path = "/v2/quotations";
+    $request->path = '/v2/quotations';
     $request->body = $body;
     $request->host = $this->host;
     $request->key = $this->key;
@@ -115,6 +115,3 @@ class LalamoveApi {
     return $request->query();
   }
 }
-
-
-

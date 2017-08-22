@@ -45,7 +45,7 @@ class Request {
       $_encryptBody = $time.'\r\n.$this->method.\r\n'.$this->path.'\r\n\r\n';
     } else {
       $_encryptBody = $time.'\r\n'.$this->method.'\r\n'.$this->path.'\r\n\r\n'.json_encode($this->body);
-    }   
+    }
     return hash_hmac('sha256', $_encryptBody, $this->secret);
   }
 

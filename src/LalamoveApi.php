@@ -61,7 +61,7 @@ class Request {
       'Authorization' => 'hmac '.$this->key.':'.$time.':'.$this->getSignature($time),
       'Accept' => "application/json",
       'X-LLM-Country' => $this->country
-    ];  
+    ];
   }
 
   /**

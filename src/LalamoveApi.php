@@ -49,6 +49,10 @@ class Request {
     return hash_hmac('sha256', $_encryptBody, $this->secret);
   }
 
+  /**
+   * Build and return the header require for calling lalamove API
+   * @return {Object} an associative aray of lalamove header
+   */
   public function buildHeader() {
     $time = time() * 1000;
     return [
@@ -60,14 +64,21 @@ class Request {
     ];  
   }
 
-  public function query() {
+  /**
+   * Send out the request via guzzleHttp
+   * @return return the result after requesting through guzzleHttp
+   */
+  public function send() {
     $client = new \GuzzleHttp\Client();
 
-    return $client->request($this->method, $this->host.$this->path, [
+    $content = [
       'headers' => $this->buildHeader(),
-      'json' => $this->body,
       'http_errors' => false
-    ]);
+    ];
+    if ($this->method != "GET")
+      $content['json'] = $this->body;
+
+    return $client->request($this->method, $this->host.$this->path, $content);
   }
 }
 
@@ -87,7 +98,7 @@ class LalamoveApi {
    * @param $country - two letter country code such as HK, TH, SG
    *
    */
-  function __construct($host = '', $apiKey = '', $apiSecret = '', $country = '') {
+  function __construct($host = "", $apiKey = "", $apiSecret = "", $country = "") {
     $this->host = $host;
     $this->key = $apiKey;
     $this->secret = $apiSecret;
@@ -97,7 +108,7 @@ class LalamoveApi {
   /**
    * Make a http Request to get a quotation from lalamove API via guzzlehttp/guzzle
    * 
-   * @param $body, the body of the json
+   * @param $body{Object}, the body of the json
    * @return the http response from guzzlehttp/guzzle, an exception will not be thrown
    *   2xx - http request is successful
    *   4xx - unsuccessful request, see body for error message and documentation for matching
@@ -112,6 +123,88 @@ class LalamoveApi {
     $request->key = $this->key;
     $request->secret = $this->secret;
     $request->country = $this->country;
-    return $request->query();
+    return $request->send();
+  }
+
+  /**
+   * Make a http request to place an order at lalamove API via guzzlehttp/guzzle
+   * 
+   * @param $body{Object}, the body of the json
+   * @return the http response from guzzlehttp/guzzle, an exception will not be thrown
+   *   2xx - http request is successful
+   *   4xx - unsuccessful request, see body for error message and documentation for matching
+   *   5xx - server error, please contact lalamove
+   */
+  public function postOrder($body) {
+    $request = new Request();
+    $request->method = "POST";
+    $request->path = "/v2/orders";
+    $request->body = $body;
+    $request->host = $this->host;
+    $request->key = $this->key;
+    $request->secret = $this->secret;
+    $request->country = $this->country;
+    return $request->send();
+  }
+
+  /**
+   * Make a http request to get the status of order
+   * 
+   * @param $orderId(String), the customerOrderId of lalamove
+   * @return the http response from guzzlehttp/guzzle, an exception will not be thrown
+   *   2xx - http request is successful
+   *   4xx - unsuccessful request, see body for error message and documentation for matching
+   *   5xx - server error, please contact lalamove
+   */
+  public function getOrderStatus($orderId) {
+    $request = new Request();
+    $request->method = "GET";
+    $request->path = "/v2/orders/".$orderId;
+    $request->host = $this->host;
+    $request->key = $this->key;
+    $request->secret = $this->secret;
+    $request->country = $this->country;
+    return $request->send();
+  }
+  
+  /**
+   * Make a http request to get the driver Info
+   * 
+   * @param $orderId(String), the customerOrderId of lalamove
+   * @return the http response from guzzlehttp/guzzle, an exception will not be thrown
+   *   2xx - http request is successful
+   *   4xx - unsuccessful request, see body for error message and documentation for matching
+   *   5xx - server error, please contact lalamove
+   */
+  public function getDriverInfo($orderId, $driverId) {
+    $request = new Request();
+    $request->method = "GET";
+    $request->path = "/v2/orders/".$orderId."/drivers/".$driverId;
+    $request->host = $this->host;
+    $request->key = $this->key;
+    $request->secret = $this->secret;
+    $request->country = $this->country;
+    return $request->send();
+  }
+
+  /**
+   * Make a http request to get the driver Location
+   * 
+   * @param $orderId(String), the customerOrderId of lalamove
+   * @param $driverId(String), the id of the driver at lalamove
+   * @return the http response from guzzlehttp/guzzle, an exception will not be thrown
+   *   2xx - http request is successful
+   *   4xx - unsuccessful request, see body for error message and documentation for matching
+   *   5xx - server error, please contact lalamove
+   */
+  public function getDriverLocation($orderId, $driverId) {
+    $request = new Request();
+    $request->method = "GET";
+    $request->path = "/v2/orders/".$orderId."/drivers/".$driverId."/location";
+    $request->host = $this->host;
+    $request->key = $this->key;
+    $request->secret = $this->secret;
+    $request->country = $this->country;
+    return $request->send();
   }
 }

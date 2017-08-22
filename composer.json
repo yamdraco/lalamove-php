@@ -1,7 +1,7 @@
 {
   "name": "lalamove/php",
   "require": {
-    "php": ">=5.4",
+    "php": ">=5.5",
     "guzzlehttp/guzzle": "~5.3.1|~6.0"
   },
   "require-dev": {

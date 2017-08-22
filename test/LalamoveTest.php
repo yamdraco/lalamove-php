@@ -87,7 +87,7 @@ class LalamoveTest extends TestCase {
    * @depends testQuotation
    */
   public function testPostOrder($results) {
-    $request = new \Lalamove\Api\LalamoveAPi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
+    $request = new \Lalamove\Api\LalamoveApi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
     $this->body['scheduleAt'] = $results['scheduleAt'];
     $this->body['quotedTotalFee'] = array(
       'amount' => $results['quotation']->totalFee,
@@ -105,25 +105,25 @@ class LalamoveTest extends TestCase {
    * @depends testPostOrder
    */
   public function testGetOrderStatus($results) {
-    $request = new \Lalamove\Api\LalamoveAPi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
+    $request = new \Lalamove\Api\LalamoveApi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
     $result = $request->getOrderStatus($results['orderId']->customerOrderId);
     self::assertSame($result->getStatusCode(), 200);
   }
 
   public function testGetExistingOrderStatus() {
-    $request = new \Lalamove\Api\LalamoveAPi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
+    $request = new \Lalamove\Api\LalamoveApi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
     $result = $request->getOrderStatus("3dc4959b-8705-11e7-a723-06bff2d87e1b");
     self::assertSame($result->getStatusCode(), 200);
   }
 
   public function testGetDriverInfo() {
-    $request = new \Lalamove\Api\LalamoveAPi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
+    $request = new \Lalamove\Api\LalamoveApi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
     $result = $request->getDriverInfo('3dc4959b-8705-11e7-a723-06bff2d87e1b', '21712');
     self::assertSame($result->getStatusCode(), 200);
   }
 
   public function testGetDriverLocation() {
-    $request = new \Lalamove\Api\LalamoveAPi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
+    $request = new \Lalamove\Api\LalamoveApi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
     $result = $request->getDriverLocation('3dc4959b-8705-11e7-a723-06bff2d87e1b', '21712');
     self::assertSame($result->getStatusCode(), 200);
   }

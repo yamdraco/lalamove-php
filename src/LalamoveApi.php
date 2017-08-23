@@ -33,7 +33,7 @@ class Request {
   public $country = '';
   public $ch = null;
   /**
-   * Create the signature for the
+   * Create a signature
    * @param $time, time to create the signature (should use current time, same as the Authorization timestamp)
    *
    * @return a signed signature using the secret

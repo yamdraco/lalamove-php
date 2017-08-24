@@ -110,6 +110,15 @@ class LalamoveTest extends TestCase {
     self::assertSame($result->getStatusCode(), 200);
   }
 
+  /**
+   * @depends testPostOrder
+   */
+  public function testCancelOrder($results) {
+    $request = new \Lalamove\Api\LalamoveApi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
+    $result = $request->cancelOrder($results['orderId']->customerOrderId);
+    self::assertSame($result->getStatusCode(), 200);
+  }
+
   public function testGetExistingOrderStatus() {
     $request = new \Lalamove\Api\LalamoveApi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
     $result = $request->getOrderStatus("3dc4959b-8705-11e7-a723-06bff2d87e1b");

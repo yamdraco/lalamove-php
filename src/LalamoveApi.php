@@ -207,6 +207,26 @@ class LalamoveApi {
     $request->country = $this->country;
     return $request->send();
   }
+
+  /**
+   * Cancel the http request to get the driver location 
+   *
+   * @param $orderId(String), the customerOrderId of lalamove
+   * @return the http response from guzzlehttp/guzzle, an exception will not be thrown
+   *   2xx - http request is successful
+   *   4xx - unsuccessful request, see body for error message and documentation for matching
+   *   5xx - server error, please contact lalamove
+   */
+  public function cancelOrder($orderId) {
+    $request = new Request();
+    $request->method = "PUT";
+    $request->path = "/v2/orders/".$orderId."/cancel";
+    $request->host = $this->host;
+    $request->key = $this->key;
+    $request->secret = $this->secret;
+    $request->country = $this->country;
+    return $request->send();
+  }
 }
 
 

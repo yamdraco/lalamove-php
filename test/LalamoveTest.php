@@ -10,11 +10,16 @@ if (!getenv('country')) {
   $Loader->putenv();
 }
 
-function generateRandomString($length = 10) {
-  return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
-}
+class LalamoveTest extends TestCase
+{
 
-class LalamoveTest extends TestCase {
+  public function generateRandomString($length = 10)
+  {
+    $x = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    return substr(str_shuffle(str_repeat($x, ceil($length/strlen($x)))), 1, $length);
+  }
+
+
   public $body = array(
     "serviceType" => "MOTORCYCLE",
     "specialRequests" => array(),
@@ -54,11 +59,8 @@ class LalamoveTest extends TestCase {
     )
   );
 
-  public function generateRandomString($length = 10) {
-    return substr(str_shuffle(str_repeat($x='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length/strlen($x)) )),1,$length);
-  }
-
-  public function testAuthFail() {
+  public function testAuthFail()
+  {
     $request = new \Lalamove\Api\LalamoveApi(getenv('host'), 'abc123', 'abc123', getenv('country'));
     $result = $request->quotation($this->body);
 
@@ -66,7 +68,8 @@ class LalamoveTest extends TestCase {
     self::assertSame($result->getStatusCode(), 401);
   }
 
-  public function testQuotation() {
+  public function testQuotation()
+  {
     $results = [];
     $scheduleAt = gmdate('Y-m-d\TH:i:s\Z', time() + 60 * 30);
     $this->body['scheduleAt'] = $scheduleAt;
@@ -86,14 +89,17 @@ class LalamoveTest extends TestCase {
   /**
    * @depends testQuotation
    */
-  public function testPostOrder($results) {
+  public function testPostOrder($results)
+  {
     $request = new \Lalamove\Api\LalamoveApi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
     $this->body['scheduleAt'] = $results['scheduleAt'];
     $this->body['quotedTotalFee'] = array(
       'amount' => $results['quotation']->totalFee,
       'currency' => $results['quotation']->totalFeeCurrency
     );
-    $this->body['deliveries'][0]['remarks'] = $this->generateRandomString();    // too frequent submission of the same body will cause 429 error
+    // too frequent submission of the same body will cause 429 error
+    // therefore adding random string inside the remark when testing
+    $this->body['deliveries'][0]['remarks'] = $this->generateRandomString();
     $result = $request->postOrder($this->body);
     self::assertSame($result->getStatusCode(), 200);
 
@@ -104,7 +110,8 @@ class LalamoveTest extends TestCase {
   /**
    * @depends testPostOrder
    */
-  public function testGetOrderStatus($results) {
+  public function testGetOrderStatus($results)
+  {
     $request = new \Lalamove\Api\LalamoveApi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
     $result = $request->getOrderStatus($results['orderId']->customerOrderId);
     self::assertSame($result->getStatusCode(), 200);
@@ -113,25 +120,29 @@ class LalamoveTest extends TestCase {
   /**
    * @depends testPostOrder
    */
-  public function testCancelOrder($results) {
+  public function testCancelOrder($results)
+  {
     $request = new \Lalamove\Api\LalamoveApi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
     $result = $request->cancelOrder($results['orderId']->customerOrderId);
     self::assertSame($result->getStatusCode(), 200);
   }
 
-  public function testGetExistingOrderStatus() {
+  public function testGetExistingOrderStatus()
+  {
     $request = new \Lalamove\Api\LalamoveApi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
     $result = $request->getOrderStatus("3dc4959b-8705-11e7-a723-06bff2d87e1b");
     self::assertSame($result->getStatusCode(), 200);
   }
 
-  public function testGetDriverInfo() {
+  public function testGetDriverInfo()
+  {
     $request = new \Lalamove\Api\LalamoveApi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
     $result = $request->getDriverInfo('3dc4959b-8705-11e7-a723-06bff2d87e1b', '21712');
     self::assertSame($result->getStatusCode(), 200);
   }
 
-  public function testGetDriverLocation() {
+  public function testGetDriverLocation()
+  {
     $request = new \Lalamove\Api\LalamoveApi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
     $result = $request->getDriverLocation('3dc4959b-8705-11e7-a723-06bff2d87e1b', '21712');
     self::assertSame($result->getStatusCode(), 200);

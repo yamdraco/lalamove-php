@@ -85,6 +85,38 @@ class Request
 
     return $client->request($this->method, $this->host.$this->path, $content);
   }
+
+  public function fire()
+  {
+    $time = time() * 1000;
+    $uniqid = uniqid();
+    $key = $this->key;
+    $signature = $this->getSignature($time);
+    $country = $this->country;
+    $method = $this->method;
+    $body = (object)$this->body;
+    $header = 
+      "X-Request-ID: $uniqid\r\n".
+      'Content-type: application/json; charset=utf-8\r\n'.
+      "Authorization: hmac $key:$time:$signature\r\n".
+      'Accept: application/json\r\n'.
+      "X-LLM-Country: $country\r\n";
+
+    $options = [
+      'http' => [
+        'header' => $header,
+        'method' => $method,
+        'content' => json_encode($body)
+      ] 
+    ];
+
+    $context = stream_context_create($options);
+    $result = @file_get_contents($url, false, $context);
+    return [
+      'body' => $result,
+      'code' => $http_response_header[0]
+    ];
+  }
 }
 
 class LalamoveApi
@@ -131,7 +163,7 @@ class LalamoveApi
     $request->key = $this->key;
     $request->secret = $this->secret;
     $request->country = $this->country;
-    return $request->send();
+    return $request->fire();
   }
 
   /**
@@ -153,7 +185,7 @@ class LalamoveApi
     $request->key = $this->key;
     $request->secret = $this->secret;
     $request->country = $this->country;
-    return $request->send();
+    return $request->fire();
   }
 
   /**
@@ -169,12 +201,12 @@ class LalamoveApi
   {
     $request = new Request();
     $request->method = "GET";
-    $request->path = "/v2/orders/".$orderId;
+    $request->path = "/v2/orders/$orderId";
     $request->host = $this->host;
     $request->key = $this->key;
     $request->secret = $this->secret;
     $request->country = $this->country;
-    return $request->send();
+    return $request->fire();
   }
   
   /**
@@ -190,12 +222,12 @@ class LalamoveApi
   {
     $request = new Request();
     $request->method = "GET";
-    $request->path = "/v2/orders/".$orderId."/drivers/".$driverId;
+    $request->path = "/v2/orders/$orderId/drivers/$driverId";
     $request->host = $this->host;
     $request->key = $this->key;
     $request->secret = $this->secret;
     $request->country = $this->country;
-    return $request->send();
+    return $request->fire();
   }
 
   /**
@@ -212,12 +244,12 @@ class LalamoveApi
   {
     $request = new Request();
     $request->method = "GET";
-    $request->path = "/v2/orders/".$orderId."/drivers/".$driverId."/location";
+    $request->path = "/v2/orders/$orderId/drivers/$driverId/location";
     $request->host = $this->host;
     $request->key = $this->key;
     $request->secret = $this->secret;
     $request->country = $this->country;
-    return $request->send();
+    return $request->fire();
   }
 
   /**
@@ -233,11 +265,11 @@ class LalamoveApi
   {
     $request = new Request();
     $request->method = "PUT";
-    $request->path = "/v2/orders/".$orderId."/cancel";
+    $request->path = "/v2/orders/$orderId/cancel";
     $request->host = $this->host;
     $request->key = $this->key;
     $request->secret = $this->secret;
     $request->country = $this->country;
-    return $request->send();
+    return $request->fire();
   }
 }

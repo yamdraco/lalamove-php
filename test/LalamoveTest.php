@@ -64,8 +64,7 @@ class LalamoveTest extends TestCase
     $request = new \Lalamove\Api\LalamoveApi(getenv('host'), 'abc123', 'abc123', getenv('country'));
     $result = $request->quotation($this->body);
 
-    $content = (string)$result->getBody();
-    self::assertSame($result->getStatusCode(), 401);
+    self::assertSame($result['code'], 'HTTP/1.1 401 Unauthorized');
   }
 
   public function testQuotation()
@@ -77,9 +76,9 @@ class LalamoveTest extends TestCase
     $request = new \Lalamove\Api\LalamoveApi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
     $result = $request->quotation($this->body);
 
-    self::assertSame($result->getStatusCode(), 200);
+    self::assertSame($result['code'], 'HTTP/1.1 200 OK');
     
-    $content = json_decode($result->getBody()->getContents());
+    $content = json_decode($result['body']);
 
     $results['scheduleAt'] = $scheduleAt;
     $results['quotation'] = $content;
@@ -101,9 +100,9 @@ class LalamoveTest extends TestCase
     // therefore adding random string inside the remark when testing
     $this->body['deliveries'][0]['remarks'] = $this->generateRandomString();
     $result = $request->postOrder($this->body);
-    self::assertSame($result->getStatusCode(), 200);
-
-    $results['orderId'] = json_decode($result->getBody()->getContents());
+    self::assertSame($result['code'], 'HTTP/1.1 200 OK');
+    
+    $results['orderId'] = json_decode($result['body']);
     return $results;
   }
 
@@ -114,7 +113,7 @@ class LalamoveTest extends TestCase
   {
     $request = new \Lalamove\Api\LalamoveApi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
     $result = $request->getOrderStatus($results['orderId']->customerOrderId);
-    self::assertSame($result->getStatusCode(), 200);
+    self::assertSame($result['code'], 'HTTP/1.1 200 OK');
   }
 
   /**
@@ -124,27 +123,27 @@ class LalamoveTest extends TestCase
   {
     $request = new \Lalamove\Api\LalamoveApi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
     $result = $request->cancelOrder($results['orderId']->customerOrderId);
-    self::assertSame($result->getStatusCode(), 200);
+    self::assertSame($result['code'], 'HTTP/1.1 200 OK');
   }
 
   public function testGetExistingOrderStatus()
   {
     $request = new \Lalamove\Api\LalamoveApi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
     $result = $request->getOrderStatus("3dc4959b-8705-11e7-a723-06bff2d87e1b");
-    self::assertSame($result->getStatusCode(), 200);
+    self::assertSame($result['code'], 'HTTP/1.1 200 OK');
   }
 
   public function testGetDriverInfo()
   {
     $request = new \Lalamove\Api\LalamoveApi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
     $result = $request->getDriverInfo('3dc4959b-8705-11e7-a723-06bff2d87e1b', '21712');
-    self::assertSame($result->getStatusCode(), 200);
+    self::assertSame($result['code'], 'HTTP/1.1 200 OK');
   }
 
   public function testGetDriverLocation()
   {
     $request = new \Lalamove\Api\LalamoveApi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
     $result = $request->getDriverLocation('3dc4959b-8705-11e7-a723-06bff2d87e1b', '21712');
-    self::assertSame($result->getStatusCode(), 200);
+    self::assertSame($result['code'], 'HTTP/1.1 200 OK');
   }
 }

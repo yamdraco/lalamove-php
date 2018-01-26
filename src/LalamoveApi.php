@@ -46,7 +46,7 @@ class Request
     if ($this->method == "GET") {
       $_encryptBody = $time."\r\n".$this->method."\r\n".$this->path."\r\n\r\n";
     } else {
-      $_encryptBody = $time."\r\n".$this->method."\r\n".$this->path."\r\n\r\n".json_encode($this->body);
+      $_encryptBody = $time."\r\n".$this->method."\r\n".$this->path."\r\n\r\n".json_encode((object)$this->body);
     }
     return hash_hmac("sha256", $_encryptBody, $this->secret);
   }
@@ -80,7 +80,7 @@ class Request
       'http_errors' => false
     ];
     if ($this->method != "GET") {
-      $content['json'] = $this->body;
+      $content['json'] = (object)$this->body;
     }
 
     return $client->request($this->method, $this->host.$this->path, $content);

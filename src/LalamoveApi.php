@@ -80,7 +80,7 @@ class Request
       'http_errors' => false
     ];
     if ($this->method != "GET") {
-      $content['json'] = $this->body;
+      $content['json'] = (object)$this->body;
     }
 
     return $client->request($this->method, $this->host.$this->path, $content);

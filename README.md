@@ -1,11 +1,11 @@
-![](https://travis-ci.org/yamdraco/lalamove-php.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/yamdraco/lalamove-php/badge.svg?branch=master)](https://coveralls.io/github/yamdraco/lalamove-php?branch=master)
+[![Build Status](https://travis-ci.org/yamdraco/lalamove-php.svg?branch=master)](https://travis-ci.org/yamdraco/lalamove-php) [![Coverage Status](https://coveralls.io/repos/github/yamdraco/lalamove-php/badge.svg?branch=master)](https://coveralls.io/github/yamdraco/lalamove-php?branch=master)
 
 # Lalamove Unofficial Client Library for PHP
 ## Library Maintenance
 This library is an unoffical library for lalamove api. Currently we are fixing all necessary bug and adding essential features to ensure the lirbary continues to meet your needs in accessing the Lalamove APIs. Non-critical issues will be closed. Any issue may be reopened if it is causing ongoing problem.
 
 ## Requirements
-- PHP 5.4.0 or higher
+- PHP 5.5.0 or higher
 
 ## Installation
 You can use **Composer**
@@ -24,13 +24,14 @@ If you wish to submit a bug, issue, or feature request, then you can find the [i
 5. A description of **what actually happened**
 
 ## Releases
+### 20180126 (v1.0.1)
+* By Alpha
+* Force body to be object at all condition during json_encode
+
 ### 20170825 (v1.0.0)
 * By Draco
 * Quotation, Place Order and Cancel API
 * Get Order Info, Driver Info and Location API
 * Continuous integration setup
 * PHP Linter setup
-
-
-
 

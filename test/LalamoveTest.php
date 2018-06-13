@@ -143,8 +143,25 @@ class LalamoveTest extends TestCase
 
   public function testGetDriverLocation()
   {
-    $request = new \Lalamove\Api\LalamoveApi(getenv('host'), getenv('key'), getenv('secret'), getenv('country'));
-    $result = $request->getDriverLocation('3dc4959b-8705-11e7-a723-06bff2d87e1b', '21712');
+    $body = [
+      "location" => [
+        "lat" => "13.740167",
+        "lng" => "100.535237"
+      ],
+      "updatedAt" => "2017-12-01T14:30.00Z"
+    ];
+
+    $response = new Guzzle\Http\Message\Response(200, [], json_encode((object)$body));
+
+    $mock = Mockery::mock(\Lalamove\Api\LalamoveApi::class);
+    $mock
+      ->shouldReceive('getDriverLocation')
+      ->with('3dc4959b-8705-11e7-a723-06bff2d87e1b', '21712')
+      ->andReturn($response);
+
+    $result = $mock->getDriverLocation('3dc4959b-8705-11e7-a723-06bff2d87e1b', '21712');
     self::assertSame($result->getStatusCode(), 200);
+    self::assertSame($result->json()['location']['lat'], "13.740167");
+    self::assertSame($result->json()['updatedAt'], "2017-12-01T14:30.00Z");
   }
 }

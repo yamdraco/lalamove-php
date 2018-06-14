@@ -20,7 +20,7 @@ composer require lalamove/php:1.0.2
 The following the code we need to make quotation for SG
 ```
 $body = array(
-  "scheduleAt" => gmdate('Y-m-d\TH:i:s\Z', time() + 60 * 30)  // ISOString with the format YYYY-MM-ddTHH:mm:ss.000Z at UTC time
+  "scheduleAt" => gmdate('Y-m-d\TH:i:s\Z', time() + 60 * 30), // ISOString with the format YYYY-MM-ddTHH:mm:ss.000Z at UTC time
   "serviceType" => "MOTORCYCLE",                              // string to pick the available service type
   "specialRequests" => array(),                               // array of strings available for the service type
   "requesterContact" => array(
@@ -74,7 +74,7 @@ Sample Response
 The Response from the quotation is needed for Place order API to lock the price
 ```
 $body = array(
-  "scheduleAt" => gmdate('Y-m-d\TH:i:s\Z', time() + 60 * 30)  // ISOString with the format YYYY-MM-ddTHH:mm:ss.000Z at UTC time
+  "scheduleAt" => gmdate('Y-m-d\TH:i:s\Z', time() + 60 * 30), // ISOString with the format YYYY-MM-ddTHH:mm:ss.000Z at UTC time
   "serviceType" => "MOTORCYCLE",                              // string to pick the available service type
   "specialRequests" => array(),                               // array of strings available for the service type
   "requesterContact" => array(

@@ -60,7 +60,8 @@ $body = array(
 );
 
 $request = new \Lalamove\Api\LalamoveApi('https://sandbox-rest.lalamove.com', <apiKey>, <apiSecret>, 'SG');
-$result = $request->quotation($body);
+$response = $request->quotation($body);
+$result = json_decode($response->getBody());
 ```
 Sample Response
 ```
@@ -118,7 +119,8 @@ $body = array(
 );
 
 $request = new \Lalamove\Api\LalamoveApi('https://sandbox-rest.lalamove.com', <apiKey>, <apiSecret>, 'SG');
-$result = $request->postOrder($body);
+$response = $request->postOrder($body);
+$result = json_decode($response->getBody());
 ```
 Sample Response
 ```
@@ -133,7 +135,8 @@ Once an order is placed, you can query the result of the order every 45s, notice
 To get order information
 ```
 $request = new \Lalamove\Api\LalamoveApi('https://sandbox-rest.lalamove.com', <apiKey>, <apiSecret>, 'SG');
-$result = $request->getOrderStatus(<Order id such as a5232cd5-677d-49f8-8977-37380caeea72>);
+$response = $request->getOrderStatus(<Order id such as a5232cd5-677d-49f8-8977-37380caeea72>);
+$result = json_decode($response->getBody());
 ```
 Sample Response
 ```
@@ -147,7 +150,8 @@ Sample Response
 Getting driver information will help your team to know who will come to pick up the order
 ```
 $request = new \Lalamove\Api\LalamoveApi('https://sandbox-rest.lalamove.com', <apiKey>, <apiSecret>, 'SG');
-$result = $request->getDriverInfo(<order id>, <driverId from the above>);
+$response = $request->getDriverInfo(<order id>, <driverId from the above>);
+$result = json_decode($response->getBody());
 ```
 Sample Response
 ```
@@ -161,7 +165,8 @@ Sample Response
 Order can only be cancelled before the order is picked up and within 5 mins after the order is matched. Notice that each city is different for the cancellation buffer time, as long as the you are able to receive 200 as http status code, the cancellation is successful
 ```
 $request = new \Lalamove\Api\LalamoveApi('https://sandbox-rest.lalamove.com', <apiKey>, <apiSecret>, 'SG');
-$result = $request->cancelOrder(<order id>);
+$response = $request->cancelOrder(<order id>);
+$result = json_decode($response->getBody());
 ```
 Sample Response but http code be 200 (success) or fail (non 200 response)
 ```

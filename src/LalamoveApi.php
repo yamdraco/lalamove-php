@@ -63,7 +63,7 @@ class Request
       "Content-type" => "application/json; charset=utf-8",
       "Authorization" => "hmac ".$this->key.":".$time.":".$this->getSignature($time),
       "Accept"=> "application/json",
-      "X-LLM-Country"=> $this->country
+      "Market"=> $this->country
     ];
   }
 
@@ -125,8 +125,8 @@ class LalamoveApi
   {
     $request = new Request();
     $request->method = "POST";
-    $request->path = "/v2/quotations";
-    $request->body = $body;
+    $request->path = "/v3/quotations";
+    $request->body =  $body;
     $request->host = $this->host;
     $request->key = $this->key;
     $request->secret = $this->secret;
@@ -147,7 +147,7 @@ class LalamoveApi
   {
     $request = new Request();
     $request->method = "POST";
-    $request->path = "/v2/orders";
+    $request->path = "/v3/orders";
     $request->body = $body;
     $request->host = $this->host;
     $request->key = $this->key;
@@ -169,7 +169,7 @@ class LalamoveApi
   {
     $request = new Request();
     $request->method = "GET";
-    $request->path = "/v2/orders/".$orderId;
+    $request->path = "/v3/orders/".$orderId;
     $request->host = $this->host;
     $request->key = $this->key;
     $request->secret = $this->secret;
@@ -190,7 +190,7 @@ class LalamoveApi
   {
     $request = new Request();
     $request->method = "GET";
-    $request->path = "/v2/orders/".$orderId."/drivers/".$driverId;
+    $request->path = "/v3/orders/".$orderId."/drivers/".$driverId;
     $request->host = $this->host;
     $request->key = $this->key;
     $request->secret = $this->secret;
@@ -212,7 +212,7 @@ class LalamoveApi
   {
     $request = new Request();
     $request->method = "GET";
-    $request->path = "/v2/orders/".$orderId."/drivers/".$driverId."/location";
+    $request->path = "/v3/orders/".$orderId."/drivers/".$driverId."/location";
     $request->host = $this->host;
     $request->key = $this->key;
     $request->secret = $this->secret;
@@ -233,7 +233,7 @@ class LalamoveApi
   {
     $request = new Request();
     $request->method = "PUT";
-    $request->path = "/v2/orders/".$orderId."/cancel";
+    $request->path = "/v3/orders/".$orderId."/cancel";
     $request->host = $this->host;
     $request->key = $this->key;
     $request->secret = $this->secret;
